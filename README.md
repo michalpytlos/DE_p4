@@ -18,13 +18,16 @@ Notes on data:
 Data lakes employ the schema-on-read data model. The analytics tables were designed, however, to a particular schema shown in Figure 1. Tables *songplays* (fact table), *users*, *songs*, *artists* and *time* form a star schema optimized for queries on song play analysis. The chosen schema, compared to a highly normalized schema, allows for easier and faster data analytics by making the queries much simpler (fewer joins). Note that the relations between the tables shown in Figure 1 are not enforced in any way as there is no concept of primary and foreign keys in Spark.
 
 ![](at_schema.png)
+
 *Figure 1: Schema of the analytics tables*
 
 ### ETL pipeline
 DEP4 performs the following:
 1. Load song and log data from S3 to two intermediate DataFrames. In order to speed up data loading from S3, instead of using globbing to find all the relevant json files, list of their S3 keys is obtained using boto3.
 2. Extract data from the intermediate DataFrames to the five analytics tables (DataFrames) shown in Figure 1.
-3. Save each analytics table to S3 as a collection of parquet files; partition *songplays* and *time* by year and month and *songs* by year and artist_id.
+3. Save each analytics table to S3* as a collection of parquet files; partition *songplays* and *time* by year and month and *songs* by year and artist_id.
+
+&ast; Note that the analytics tables are written to S3/local FS using the **append** mode.
 
 ## Prerequisites
 * Access to cluster with Apache Spark e.g. Amazon EMR (ideally in the same region as the S3 bucket i.e. *us-west-2*)

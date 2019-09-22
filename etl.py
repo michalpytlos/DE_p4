@@ -168,8 +168,8 @@ def process_songs(spark, song_df, output_loc):
         .dropDuplicates()
 
     # write songs table to parquet files partitioned by year and artist
-    songs_table.write.partitionBy('year', 'artist_id').parquet(
-        f'{output_loc}songs')
+    songs_table.write.partitionBy('year', 'artist_id').mode(
+        'append').parquet(f'{output_loc}songs')
 
     print(f'Processed {songs_table.count()} songs')
 
@@ -193,7 +193,7 @@ def process_artists(spark, song_df, output_loc):
         .dropDuplicates()
 
     # write artists table to parquet file
-    artists_table.write.parquet(f'{output_loc}artists')
+    artists_table.write.mode('append').parquet(f'{output_loc}artists')
 
     print(f'Processed {artists_table.count()} artists')
 
@@ -217,7 +217,7 @@ def process_users(spark, log_df, output_loc):
         .dropDuplicates()
 
     # write users table to parquet file
-    users_table.write.parquet(f'{output_loc}users')
+    users_table.write.mode('append').parquet(f'{output_loc}users')
 
     print(f'Processed {users_table.count()} users')
 
@@ -248,7 +248,8 @@ def process_time(spark, log_df, output_loc):
         .dropDuplicates()
 
     # write time table to parquet file
-    time_table.write.partitionBy('year', 'month').parquet(f'{output_loc}time')
+    time_table.write.partitionBy('year', 'month').mode(
+        'append').parquet(f'{output_loc}time')
 
     print(f'Processed {time_table.count()} timestamps')
 
@@ -287,8 +288,8 @@ def process_songplays(spark, song_df, log_df, output_loc):
         .withColumn('songplay_id', monotonically_increasing_id())
 
     # write users table to parquet file
-    songplays_table.write.partitionBy('year', 'month').parquet(
-        f'{output_loc}songplays')
+    songplays_table.write.partitionBy('year', 'month').mode(
+        'append').parquet(f'{output_loc}songplays')
 
     print(f'Processed {songplays_table.count()} songplays')
 
